@@ -3,11 +3,12 @@ import { Card } from "./Card.js"
 import { Pair } from "./Pair.js"
 
 let g = new Game();
-g.createCards();
 
 // lancement du jeu
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("startBtn").addEventListener("click", function () {
+        g = new Game();
+        g.createCards();
         // mélange les cartes
         g.randomizeCards();
 
