@@ -1,22 +1,34 @@
 export class Card {
-    number;
-    real_image;
-    display_image;
 
     constructor(number, real_image) {
-        this.number = number
-        this.real_image = real_image
-        this.display_image = "resources/images/blank.png"
+        this.number = number;
+        this.real_image = real_image;
+        this.display_image = "resources/images/blank.png";
+        this.isFlipped = false;
     }
 
-    // méthode a retravailler car fonctionne mal
+    // "retourne" la carte
+    flip() {
+        // inverse le statut
+        this.isFlipped = !this.isFlipped;
 
-    // flip() {
-    //     if(this.display_image == "resources/images/blank.png") {
-    //         this.display_image = this.real_image
-    //         console.log("yeah")
-    //     } else {
-    //         this.display_image = "resources/images/blank.png"
-    //     }
-    // }
+        if (this.isFlipped) {
+            this.display_image = this.real_image;
+        } else {
+            this.display_image = "resources/images/blank.png";
+        }
+    }
+
+    // affichage de la carte dans le dom
+    render() {
+        let dom = document.createElement("div");
+        dom.classList.add("carte", "col-3", "mb-2");
+        dom.setAttribute("data-rank", this.number)
+
+        let img = document.createElement("img");
+        img.src = "resources/images/blank.png";
+
+        dom.appendChild(img);
+        return dom;
+    }
 }

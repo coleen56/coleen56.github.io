@@ -18,17 +18,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // affichage des cartes initial dans l'ihm
 function displayCards(cards) {
-    let html = ""
-    for (let i in cards) {
-        if (i % 4 == 0) {
-            html += "<div class=\"row\">"
-        }
-        html += "<div class=\"carte col-3 mb-2\" data-rank=\"" + i + "\"><img src=\"resources/images/blank.png\"></div>"
-        if (i % 4 == 3) {
-            html += "</div>"
-        }
-    }
-    return html;
+    let container = document.getElementById("jeu");
+    container.innerHTML = "";
+
+    cards.forEach(card => {
+        container.appendChild(card.render());
+    });
 }
 
 function startGame() {
@@ -39,10 +34,15 @@ function startGame() {
     let p;
     // flag qui permet de désactiver les reactions du listener sur les cartes si deux cartes sont retournées, pour éviter de retourner une troisième carte
     let canClick = true;
+
     // réinitialisation du champ d'affichage des coups et d'alerte de fin de partie
     document.getElementById("win").innerText = ""
     updateCounts()
-    document.getElementById("jeu").innerHTML = displayCards(g.cards)
+
+    // affichage des cartes
+    displayCards(g.cards)
+
+    console.log(g.cards)
     document.querySelectorAll(".carte").forEach(element => {
         element.addEventListener("click", function () {
             // ignore la reaction
@@ -82,13 +82,10 @@ function startGame() {
                     }, 2000);
                 }
                 g.incCount()
-                if (g.pairsMade.length == 8) {
-                    console.log("game ended with " + g.count + " tries")
-                }
                 // affichage du nombre d'essai
                 updateCounts()
 
-                if (g.pairsMade.length == 8) {
+                if (g.pairsMade.length == g.cards.length/2) {
                     stopGame()
                 }
             }
