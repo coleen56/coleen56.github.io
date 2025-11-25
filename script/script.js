@@ -2,16 +2,15 @@ import { Game } from "./Game.js";
 import { Card } from "./Card.js"
 import { Pair } from "./Pair.js"
 
-// initialisation du jeu
-const g = new Game();
-
+let g = new Game();
 g.createCards();
-
-g.randomizeCards();
 
 // lancement du jeu
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("startBtn").addEventListener("click", function () {
+        // mélange les cartes
+        g.randomizeCards();
+
         startGame()
     })
 })
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function displayCards(cards) {
     let html = ""
     for (let i in cards) {
-        console.log(cards[i])
         if (i % 4 == 0) {
             html += "<div class=\"row\">"
         }
@@ -38,11 +36,11 @@ function startGame() {
     let compteur = 0
     // va stocker la paire de cartes selectionnées
     let p;
-// flag qui permet de désactiver les reactions du listener sur les cartes si deux cartes sont retournées, pour éviter de retourner une troisième carte
+    // flag qui permet de désactiver les reactions du listener sur les cartes si deux cartes sont retournées, pour éviter de retourner une troisième carte
     let canClick = true;
     // réinitialisation du champ d'affichage des coups et d'alerte de fin de partie
     document.getElementById("win").innerText = ""
-    showCount(0)
+    updateCounts()
     document.getElementById("jeu").innerHTML = displayCards(g.cards)
     document.querySelectorAll(".carte").forEach(element => {
         element.addEventListener("click", function () {
@@ -72,24 +70,24 @@ function startGame() {
                 // si les deux cartes de la paire son correctes, on l'ajout à la liste des paires faites par l'utilisateur
                 if (p.isCorrect()) {
                     g.addCorrectPair(p)
-                    canClick=true
+                    canClick = true
                 } else {
                     // sinon on retourne les cartes après 2sec et le jeu continue
                     setTimeout(() => {
                         first_img.setAttribute("src", "resources/images/blank.png")
                         sec_img.setAttribute("src", "resources/images/blank.png")
                         // reactivation des réactions
-                        canClick=true
+                        canClick = true
                     }, 2000);
                 }
                 g.incCount()
-                if(g.pairsMade.length == 8) {
+                if (g.pairsMade.length == 8) {
                     console.log("game ended with " + g.count + " tries")
                 }
                 // affichage du nombre d'essai
-                showCount(g.count)
+                updateCounts()
 
-                if(g.pairsMade.length == 8) {
+                if (g.pairsMade.length == 8) {
                     stopGame()
                 }
             }
@@ -98,9 +96,10 @@ function startGame() {
     });
 }
 
-// fonction qui affiche le nombre d'essais dans l'ihm
-function showCount(count) {
-    document.getElementById("count").innerText = count
+// fonction qui affiche le nombre d'essais et le score dans l'ihm
+function updateCounts() {
+    document.getElementById("count").innerText = g.count
+    document.getElementById("score").innerText = g.pairsMade.length
 }
 
 function stopGame() {
