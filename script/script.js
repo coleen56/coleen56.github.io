@@ -40,6 +40,8 @@ function startGame() {
     let p;
 // flag qui permet de désactiver les reactions du listener sur les cartes si deux cartes sont retournées, pour éviter de retourner une troisième carte
     let canClick = true;
+    // réinitialisation du champ d'affichage des coups et d'alerte de fin de partie
+    document.getElementById("win").innerText = ""
     showCount(0)
     document.getElementById("jeu").innerHTML = displayCards(g.cards)
     document.querySelectorAll(".carte").forEach(element => {
@@ -70,6 +72,7 @@ function startGame() {
                 // si les deux cartes de la paire son correctes, on l'ajout à la liste des paires faites par l'utilisateur
                 if (p.isCorrect()) {
                     g.addCorrectPair(p)
+                    canClick=true
                 } else {
                     // sinon on retourne les cartes après 2sec et le jeu continue
                     setTimeout(() => {
@@ -85,6 +88,10 @@ function startGame() {
                 }
                 // affichage du nombre d'essai
                 showCount(g.count)
+
+                if(g.pairsMade.length == 8) {
+                    stopGame()
+                }
             }
 
         })
@@ -94,4 +101,8 @@ function startGame() {
 // fonction qui affiche le nombre d'essais dans l'ihm
 function showCount(count) {
     document.getElementById("count").innerText = count
+}
+
+function stopGame() {
+    document.getElementById("win").innerText = "Bravo ! Vous avez gagné la partie avec " + g.count + " coups."
 }
